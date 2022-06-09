@@ -1,6 +1,6 @@
 //variáveis que precisamos usar em uma ou mais funções
 let currentId;
-let valorid;
+let valorId;
 
 //variáveis para botar no gráfico
 let dataAtual;
@@ -9,7 +9,7 @@ let good = 0;
 let normal = 0;
 let bad = 0;
 let awful = 0;
-
+let allData = [];
 
 // * APARECE O CARD DE MOODS
 function colorir() {
@@ -18,15 +18,26 @@ function colorir() {
 }
 
 // * DESAPARECE CARD DE MOODS
-function voltar() { 
+function voltar() {
     let card = document.getElementsByClassName('moods');
     card.moods.style.display = 'none';
 }
 
 // * Armazena o id e a data para podermos usá-los na aplicação
 function armazenaIdEData(id, data) {
-    valorid = id;
-    let url = `http://localhost:8080/epixel?id=${id}`;
+
+
+    console.log(id)
+
+    console.log(allData[id])
+
+    valorId = id;
+
+   let valorIdBD = id - 1;
+
+    console.log(allData[valorIdBD])
+
+    // let url = `http://localhost:8080/epixel?id=${id}`;
     let pixel = document.getElementById("texto");
     let mood1 = document.getElementById("excelent");
     let mood2 = document.getElementById("good");
@@ -34,33 +45,45 @@ function armazenaIdEData(id, data) {
     let mood4 = document.getElementById("bad");
     let mood5 = document.getElementById("awful");
 
-    fetch(url)
-        .then(res => res.json())
-        .then((data) => {
-            console.log(data.id, data.humor, data.texto)
-            pixel.textContent = data.texto;
 
-            if (data.humor == 1) {
-                mood1.checked = true;
-            } else if (data.humor == 2) {
-                mood2.checked = true;
-            } else if (data.humor == 3) {
-                mood3.checked = true;
-            } else if (data.humor == 4) {
-                mood4.checked = true;
-            } else if (data.humor == 5) {
-                mood5.checked = true;
+    document.getElementById("texto").value = allData[valorIdBD].texto
 
-            } else if (data.humor == 0) {
-                mood1.checked = false;
-                mood2.checked = false;
-                mood3.checked = false;
-                mood4.checked = false;
-                mood5.checked = false;
-            }
+    // texto = 
 
 
-        })
+    console.log("all => ", allData[valorIdBD]);
+    console.log(id)
+
+    // fetch(url)
+    // .then(res => res.json())
+    // .then((data) => {
+    // console.log(data.id, data.humor, data.texto)
+    pixel.textContent = data.texto;
+
+
+
+
+    if (allData[valorIdBD].humor == 1) {
+        mood1.checked = true;
+    } else if (allData[valorIdBD].humor == 2) {
+        mood2.checked = true;
+    } else if (allData[valorIdBD].humor == 3) {
+        mood3.checked = true;
+    } else if (allData[valorIdBD].humor == 4) {
+        mood4.checked = true;
+    } else if (allData[valorIdBD].humor == 5) {
+        mood5.checked = true;
+
+    } else if (allData[valorIdBD].humor == 0) {
+        mood1.checked = false;
+        mood2.checked = false;
+        mood3.checked = false;
+        mood4.checked = false;
+        mood5.checked = false;
+    }
+
+
+    // })
 
     dataAtual = data;
     document.getElementById("date").innerHTML = dataAtual;
@@ -86,7 +109,7 @@ function coloreQuadrado() {
 function inserirDados() {
     let humor = coloreQuadrado();
     let texto = document.getElementById("texto").value;
-    let url = `http://localhost:8080/epixel?id=${valorid}&humor=${humor}&data=${dataAtual}&texto=${texto}`
+    let url = `http://localhost:8080/epixel?id=${valorId}&humor=${humor}&data=${dataAtual}&texto=${texto}`
     let Putmeth = {
         method: 'PUT',
         body: url,
@@ -107,7 +130,7 @@ function inserirDados() {
 // * Redefine o pixel
 function redefinircelula() {
 
-    let id = valorid; // valor que está dentro da função armazenaid()
+    let id = valorId; // valor que está dentro da função armazenaid()
     let x = parseInt(id);
 
     let url = `http://localhost:8080/epixel?id=${x}`
@@ -136,26 +159,30 @@ function getData() {
 function show(data) {
     console.log(data);
 
+    allData = data;
+
+
+
     for (let i = 0; i <= data.length; i++) {
-    let pixel = document.getElementById(i + 1);
-    if (data[i].humor == 1) { 
-        console.log("aqui");
-        pixel.style.backgroundColor = "#256A3E";
-        excelent++;
-    } else if (data[i].humor == 2) {
-        pixel.style.backgroundColor = "#399e5a";
-        good++;
-    } else if (data[i].humor == 3) {
-        pixel.style.backgroundColor = "#F2E86D";
-        normal++;
-    } else if (data[i].humor == 4) {
-        pixel.style.backgroundColor = "#337CA0";
-        bad++;
-    } else if (data[i].humor == 5) {
-        pixel.style.backgroundColor = "#E85F5C";
-        awful++;
+        let pixel = document.getElementById(i + 1);
+        if (data[i].humor == 1) {
+            console.log("aqui");
+            pixel.style.backgroundColor = "#256A3E";
+            excelent++;
+        } else if (data[i].humor == 2) {
+            pixel.style.backgroundColor = "#399e5a";
+            good++;
+        } else if (data[i].humor == 3) {
+            pixel.style.backgroundColor = "#F2E86D";
+            normal++;
+        } else if (data[i].humor == 4) {
+            pixel.style.backgroundColor = "#337CA0";
+            bad++;
+        } else if (data[i].humor == 5) {
+            pixel.style.backgroundColor = "#E85F5C";
+            awful++;
+        }
     }
-}
 
 }
 
